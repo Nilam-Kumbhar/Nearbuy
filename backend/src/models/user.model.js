@@ -20,15 +20,38 @@ const userSchema = new Schema(
             lowercase:true,
             trim:true,
         },
+        phone: {
+            type: String,
+            required: true,
+            unique: true,
+        },
         password:{
             type: String,
             required:[true,"Password is required"]
         },
         role: {
-        type: String,
-        enum: ["customer","shop_owner","delivery"],
-        default: "customer"
+            type: String,
+            enum: ["customer","shop_owner","delivery"],
+            default: "customer",
+            required: true
         },
+        avatar:{
+            type: String, //cloudinary url using
+            required:true,
+        },
+        addresses: [
+        {
+            label: { type: String, default: "Home" }, // Home / Work / Other
+            addressLine: String,
+            city: String,
+            pincode: String,
+            location: {
+            type: { type: String, enum: ["Point"], default: "Point" },
+            coordinates: { type: [Number], default: [0, 0] }, // [lng, lat]
+            },
+            isDefault: { type: Boolean, default: false },
+        },
+        ],
         refreshToken:{
             type: String
         }
@@ -39,10 +62,10 @@ const userSchema = new Schema(
 )
 
 userSchema.pre("save",async function (next) {
-    if(!this.isModified("password")) return next();
+    if(!this.isModified("password")) return ;
     
     this.password = await bcrypt.hash(this.password,10)
-    next()
+    
 })
 
 userSchema.methods.isPasswordCorrect = async function name(password) {
