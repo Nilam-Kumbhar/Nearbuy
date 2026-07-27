@@ -8,6 +8,7 @@ import {
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
@@ -15,6 +16,7 @@ router.post(
     "/add",
     verifyJWT,
     authorizeRoles("customer"),
+    upload.array("images", 5),
     addReview
 );
 
@@ -22,6 +24,7 @@ router.put(
     "/:id",
     verifyJWT,
     authorizeRoles("customer"),
+    upload.array("images", 5),
     updateReview
 );
 
