@@ -4,11 +4,16 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 import {
     createShop,
     getMyShop,
-    updateShop
+    updateShop,
+    getNearbyShops
 } from "../controllers/shop.controller.js";
 
 const router = Router();
 
+// Public Routes
+router.get("/nearby", getNearbyShops);
+
+// Shop Owner Routes
 router.post(
     "/create",
     verifyJWT,
