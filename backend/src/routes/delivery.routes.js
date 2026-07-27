@@ -2,7 +2,9 @@ import { Router } from "express";
 import {
     getAssignedOrders,
     updateDeliveryStatus,
-    deliveryHistory
+    deliveryHistory,
+    toggleAvailability,
+    updateLiveLocation
 } from "../controllers/delivery.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -29,6 +31,20 @@ router.get(
     verifyJWT,
     authorizeRoles("delivery"),
     deliveryHistory
+);
+
+router.put(
+    "/toggle-availability",
+    verifyJWT,
+    authorizeRoles("delivery"),
+    toggleAvailability
+);
+
+router.put(
+    "/location",
+    verifyJWT,
+    authorizeRoles("delivery"),
+    updateLiveLocation
 );
 
 export default router;
