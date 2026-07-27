@@ -1,26 +1,30 @@
 import { Router } from "express";
-import { registerUser,loginUser,getCurrentUser } from "../controllers/user.controller.js";
-import {upload} from "../middlewares/multer.middleware.js"
+import {
+    registerUser,
+    loginUser,
+    logoutUser,
+    getCurrentUser
+} from "../controllers/user.controller.js";
+import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { authorizeRoles } from "../middlewares/role.middleware.js";
 
-const router=Router()
+const router = Router();
 
+// Public Routes
 router.route("/register").post(
     upload.fields([
         {
-            name:"avatar",
-            maxCount:1
+            name: "avatar",
+            maxCount: 1
         }
     ]),
-    registerUser)
-router.route("/login").post(loginUser)
-
-// Protected route (Customer only)
-router.route("/current-user").get(
-    verifyJWT,
-    authorizeRoles("customer"),
-    getCurrentUser
+    registerUser
 );
 
-export default router
+router.route("/login").post(loginUser);
+
+// Protected Routes (All authenticated users)
+router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/current-user").get(verifyJWT, getCurrentUser);
+
+export default router;
