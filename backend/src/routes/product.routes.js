@@ -9,6 +9,7 @@ import {
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
@@ -21,6 +22,7 @@ router.post(
     "/add",
     verifyJWT,
     authorizeRoles("shop_owner"),
+    upload.array("images", 5),
     addProduct
 );
 
@@ -28,6 +30,7 @@ router.put(
     "/:id",
     verifyJWT,
     authorizeRoles("shop_owner"),
+    upload.array("images", 5),
     updateProduct
 );
 
