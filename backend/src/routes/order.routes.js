@@ -3,7 +3,9 @@ import {
     placeOrder,
     getMyOrders,
     getOrderById,
-    cancelOrder
+    cancelOrder,
+    getShopOrders,
+    updateOrderStatus
 } from "../controllers/order.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -11,6 +13,7 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 const router = Router();
 
+// Customer Routes
 router.post(
     "/place",
     verifyJWT,
@@ -28,7 +31,7 @@ router.get(
 router.get(
     "/:id",
     verifyJWT,
-    authorizeRoles("customer"),
+    authorizeRoles("customer", "shop_owner", "delivery"),
     getOrderById
 );
 
@@ -37,6 +40,21 @@ router.put(
     verifyJWT,
     authorizeRoles("customer"),
     cancelOrder
+);
+
+// Shop Owner Routes
+router.get(
+    "/shop-orders",
+    verifyJWT,
+    authorizeRoles("shop_owner"),
+    getShopOrders
+);
+
+router.put(
+    "/status/:id",
+    verifyJWT,
+    authorizeRoles("shop_owner"),
+    updateOrderStatus
 );
 
 export default router;
