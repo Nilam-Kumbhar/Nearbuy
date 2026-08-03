@@ -1,0 +1,117 @@
+.shop-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.shop-card-image-wrapper {
+  position: relative;
+  height: 160px;
+  width: 100%;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.shop-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shop-status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.shop-status-badge.open {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.shop-status-badge.closed {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.shop-card-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.shop-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.4rem 0;
+}
+
+.shop-card-category {
+  display: inline-block;
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+  align-self: flex-start;
+}
+
+.shop-card-details {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.shop-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.shop-distance {
+  font-weight: 600;
+  color: #059669;
+}
+
+.shop-card-btn {
+  display: block;
+  text-align: center;
+  background-color: #2563eb;
+  color: #ffffff;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.shop-card-btn:hover {
+  background-color: #1d4ed8;
+}

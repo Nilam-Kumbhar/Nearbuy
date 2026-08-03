@@ -1,0 +1,130 @@
+.orders-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.orders-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.order-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  margin-bottom: 1rem;
+}
+
+.order-id {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.order-date {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.order-status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.order-status-badge.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.order-status-badge.processing, .order-status-badge.out_for_delivery {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.order-status-badge.delivered {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.order-status-badge.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.order-item-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #f3f4f6;
+}
+
+.order-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.order-total-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.track-delivery-btn {
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.track-delivery-btn:hover {
+  background: #1d4ed8;
+}
+
+.orders-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
