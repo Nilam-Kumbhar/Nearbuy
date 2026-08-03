@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import "./Register.css";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -48,43 +49,87 @@ const Register = () => {
     };
 
     return (
-        <div style={{ maxWidth: "450px", margin: "3rem auto", padding: "2rem", border: "1px solid #e5e7eb", borderRadius: "8px", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", background: "#fff" }}>
-            <h2 style={{ marginBottom: "1.5rem", textAlign: "center", color: "#1f2937" }}>Create Nearbuy Account</h2>
+        <div className="register-container">
+            <h2 className="register-title">Create Nearbuy Account</h2>
             <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "1rem" }}>
-                    <label style={{ display: "block", marginBottom: "0.4rem", fontSize: "0.875rem", fontWeight: "600" }}>Username</label>
-                    <input type="text" name="username" value={formData.username} onChange={handleChange} required style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid #d1d5db" }} />
+                <div className="register-form-group">
+                    <label className="register-label">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                        className="register-input"
+                    />
                 </div>
-                <div style={{ marginBottom: "1rem" }}>
-                    <label style={{ display: "block", marginBottom: "0.4rem", fontSize: "0.875rem", fontWeight: "600" }}>Email</label>
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid #d1d5db" }} />
+                <div className="register-form-group">
+                    <label className="register-label">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="register-input"
+                    />
                 </div>
-                <div style={{ marginBottom: "1rem" }}>
-                    <label style={{ display: "block", marginBottom: "0.4rem", fontSize: "0.875rem", fontWeight: "600" }}>Phone Number</label>
-                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} required style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid #d1d5db" }} />
+                <div className="register-form-group">
+                    <label className="register-label">Phone Number</label>
+                    <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        className="register-input"
+                    />
                 </div>
-                <div style={{ marginBottom: "1rem" }}>
-                    <label style={{ display: "block", marginBottom: "0.4rem", fontSize: "0.875rem", fontWeight: "600" }}>Password</label>
-                    <input type="password" name="password" value={formData.password} onChange={handleChange} required style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid #d1d5db" }} />
+                <div className="register-form-group">
+                    <label className="register-label">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        className="register-input"
+                    />
                 </div>
-                <div style={{ marginBottom: "1rem" }}>
-                    <label style={{ display: "block", marginBottom: "0.4rem", fontSize: "0.875rem", fontWeight: "600" }}>Account Type / Role</label>
-                    <select name="role" value={formData.role} onChange={handleChange} style={{ width: "100%", padding: "0.5rem", borderRadius: "6px", border: "1px solid #d1d5db" }}>
+                <div className="register-form-group">
+                    <label className="register-label">Account Type / Role</label>
+                    <select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleChange}
+                        className="register-select"
+                    >
                         <option value="customer">Customer</option>
                         <option value="vendor">Shop Owner / Vendor</option>
                         <option value="delivery">Delivery Partner</option>
                     </select>
                 </div>
-                <div style={{ marginBottom: "1.5rem" }}>
-                    <label style={{ display: "block", marginBottom: "0.4rem", fontSize: "0.875rem", fontWeight: "600" }}>Profile Image (Avatar)</label>
-                    <input type="file" name="avatar" onChange={handleFileChange} required accept="image/*" style={{ width: "100%" }} />
+                <div className="register-form-group">
+                    <label className="register-label">Profile Image (Avatar)</label>
+                    <input
+                        type="file"
+                        name="avatar"
+                        onChange={handleFileChange}
+                        required
+                        accept="image/*"
+                        className="register-file-input"
+                    />
                 </div>
-                <button type="submit" disabled={loading} style={{ width: "100%", padding: "0.75rem", backgroundColor: "#2563eb", color: "#fff", border: "none", borderRadius: "6px", fontWeight: "600", cursor: "pointer" }}>
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="register-submit-btn"
+                >
                     {loading ? "Registering..." : "Create Account"}
                 </button>
             </form>
-            <p style={{ marginTop: "1rem", textAlign: "center", fontSize: "0.875rem", color: "#6b7280" }}>
-                Already have an account? <Link to="/login" style={{ color: "#2563eb", fontWeight: "600" }}>Sign In</Link>
+            <p className="register-footer-text">
+                Already have an account? <Link to="/login" className="register-link">Sign In</Link>
             </p>
         </div>
     );
