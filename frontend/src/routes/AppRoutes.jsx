@@ -5,6 +5,7 @@ import ProtectedRoute from "../components/common/ProtectedRoute";
 // Public / Auth Pages
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import NotFound from "../pages/NotFound";
 
 // Customer Pages
 import CustomerHome from "../pages/customer/Home";
@@ -50,7 +51,7 @@ const AppRoutes = () => {
             </Route>
 
             {/* 2. Protected Shop Owner Route Group (/shop/* & /vendor/*) */}
-            <Route element={<ProtectedRoute allowedRoles={["vendor", "shopOwner"]} />}>
+            <Route element={<ProtectedRoute allowedRoles={["vendor", "shopOwner", "shop_owner"]} />}>
                 <Route path="/shop" element={<ShopDashboard />} />
                 <Route path="/shop/dashboard" element={<ShopDashboard />} />
                 <Route path="/shop/products" element={<ManageProducts />} />
@@ -75,8 +76,8 @@ const AppRoutes = () => {
                 <Route path="/delivery/history" element={<Earnings />} />
             </Route>
 
-            {/* Catch-all 404 Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Catch-all 404 Page */}
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };

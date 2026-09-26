@@ -9,40 +9,63 @@ import { genrateAccessandRefreshTokens } from "../utils/generateToken.js";
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password, role, phone } = req.body;
 
-    if ([username, email, password, role, phone].some((field) => field?.trim() === "")) {
-        throw new ApiError(400, "All fields are required");
+    // 1. Field validation
+    if (!username?.trim() || !email?.trim() || !password?.trim() || !phone?.trim()) {
+        throw new ApiError(400, "All fields (username, email, password, phone) are required.");
     }
 
+    // 2. Role normalization
+    let targetRole = (role || "customer").toLowerCase().trim();
+    if (targetRole === "vendor" || targetRole === "shopowner") {
+        targetRole = "shop_owner";
+    }
+
+    if (!["customer", "shop_owner", "delivery"].includes(targetRole)) {
+        throw new ApiError(400, "Invalid user role specified.");
+    }
+
+    // 3. Existing user check
     const existedUser = await User.findOne({
-        $or: [{ username }, { email }]
+        $or: [
+            { username: username.toLowerCase().trim() },
+            { email: email.toLowerCase().trim() },
+            { phone: phone.trim() }
+        ]
     });
+
     if (existedUser) {
-        throw new ApiError(409, "User with email or username already exists.");
+        throw new ApiError(409, "User with this email, username, or phone number already exists.");
     }
 
+    // 4. Avatar processing with fallback
+    let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(username.trim())}&background=0D8ABC&color=fff`;
     const avatarLocalPath = req.files?.avatar?.[0]?.path;
 
-    if (!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is required.");
+    if (avatarLocalPath) {
+        try {
+            const avatar = await uploadOnCloudinary(avatarLocalPath);
+            if (avatar?.url) {
+                avatarUrl = avatar.url;
+            }
+        } catch (uploadError) {
+            console.warn("Avatar Cloudinary upload error, using fallback:", uploadError);
+        }
     }
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-    if (!avatar) {
-        throw new ApiError(400, "Avatar file upload failed.");
-    }
-
+    // 5. User creation
     const user = await User.create({
-        role,
-        email,
-        password,
-        avatar: avatar.url,
-        phone,
-        username: username.toLowerCase()
+        role: targetRole,
+        email: email.toLowerCase().trim(),
+        password: password.trim(),
+        avatar: avatarUrl,
+        phone: phone.trim(),
+        username: username.toLowerCase().trim()
     });
 
     const createdUser = await User.findById(user._id).select(
         "-password -refreshToken"
     );
+
     if (!createdUser) {
         throw new ApiError(500, "Something went wrong while registering the user");
     }

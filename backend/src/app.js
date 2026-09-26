@@ -1,16 +1,28 @@
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+
+dotenv.config({
+    path: "./.env"
+});
+
 const app = express()
 
 app.use(cors({
-    origin:process.env.CORS_ORIGIN,
-    credentials:true
-}))
+    origin: (origin, callback) => {
+        // Reflect origin if CORS_ORIGIN is '*' or matches requested origin, avoiding wildcard with credentials restriction
+        if (!origin || process.env.CORS_ORIGIN === "*" || process.env.CORS_ORIGIN?.includes(origin)) {
+            return callback(null, origin || true);
+        }
+        return callback(null, origin);
+    },
+    credentials: true
+}));
 
 app.use(express.json()) //accept data from json file
-app.use(express.urlencoded({extended:true})) //accepts data from url
+app.use(express.urlencoded({ extended: true })) //accepts data from url
 // extended - obj in obj nested obj
 app.use(express.static("public")) //this used to store img, febicon,pdf data
 
@@ -26,6 +38,7 @@ import reviewRouter from './routes/review.routes.js';
 import deliveryRouter from './routes/delivery.routes.js';
 
 import errorHandler from './middlewares/error.middleware.js';
+import { ApiError } from "./utils/ApiError.js";
 
 // routes declaration
 app.use("/api/v1/users", userRouter);
@@ -42,7 +55,10 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/review", reviewRouter);
 app.use("/api/v1/delivery", deliveryRouter);
 
+app.use((req, res, next) => {
+    next(new ApiError(404, `Route not found - ${req.originalUrl}`));
+});
 // Global Error Handler
 app.use(errorHandler);
 
-export {app}
+export { app }

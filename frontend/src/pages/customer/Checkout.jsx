@@ -37,9 +37,35 @@ const Checkout = () => {
         phone: user?.phone || "",
         notes: ""
     });
+    const [coords, setCoords] = useState(null); // { lat, lng }
+    const [locating, setLocating] = useState(true);
+ 
 
     useEffect(() => {
         loadRazorpayScript();
+    }, []);
+
+    useEffect(() => {
+        if (!("geolocation" in navigator)) {
+            toast.error("Geolocation is not supported by your browser. We need your location to deliver your order.");
+            setLocating(false);
+            return;
+        }
+ 
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setCoords({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                });
+                setLocating(false);
+            },
+            (error) => {
+                console.error("Geolocation error:", error);
+                toast.error("Unable to get your location. Please enable location access to place an order.");
+                setLocating(false);
+            }
+        );
     }, []);
 
     const handleChange = (e) => {
@@ -57,6 +83,11 @@ const Checkout = () => {
             return;
         }
 
+        if (!coords) {
+            toast.error("We need your delivery location to place the order. Please enable location access and try again.");
+            return;
+        }
+
         setLoading(true);
         try {
             // 1. Place order on backend
@@ -64,7 +95,11 @@ const Checkout = () => {
                 deliveryAddress: {
                     addressLine: deliveryAddress.addressLine,
                     city: deliveryAddress.city,
-                    pincode: deliveryAddress.pincode
+                    pincode: deliveryAddress.pincode,
+                    location: {
+                        type: "Point",
+                        coordinates: [coords.lng, coords.lat] // GeoJSON order: [longitude, latitude]
+                    }
                 },
                 paymentMethod: paymentMethod === "online" ? "online" : "cod"
             };
@@ -267,7 +302,12 @@ const Checkout = () => {
                 </div>
 
                 <div>
-                    <CartSummary onCheckout={handleCheckout} isCheckoutPage={true} />
+                    <CartSummary 
+                        onCheckout={handleCheckout} 
+                        isCheckoutPage={true} 
+                        checkoutDisabled={locating || !coords}
+                        checkoutButtonLabel={locating ? "Locating you..." : (!coords ? "Enable location to continue" : "Place Order & Pay")}
+                    />
                 </div>
             </div>
         </div>

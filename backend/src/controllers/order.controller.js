@@ -171,18 +171,12 @@ const getMyOrders = asyncHandler(async (req, res) => {
 
     const total = await Order.countDocuments(filter);
 
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            {
-                orders,
-                total,
-                page: pageNum,
-                pages: Math.ceil(total / limitNum)
-            },
-            "Customer orders fetched successfully"
-        )
-    );
+    const response = new ApiResponse(200, orders, "Customer orders fetched successfully");
+    response.total = total;
+    response.page = pageNum;
+    response.pages = Math.ceil(total / limitNum);
+
+    return res.status(200).json(response);
 });
 
 // @desc    Get order details by ID
@@ -287,18 +281,12 @@ const getShopOrders = asyncHandler(async (req, res) => {
 
     const total = await Order.countDocuments(filter);
 
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            {
-                orders,
-                total,
-                page: pageNum,
-                pages: Math.ceil(total / limitNum)
-            },
-            "Shop orders fetched successfully"
-        )
-    );
+    const response = new ApiResponse(200, orders, "Shop orders fetched successfully");
+    response.total = total;
+    response.page = pageNum;
+    response.pages = Math.ceil(total / limitNum);
+
+    return res.status(200).json(response);
 });
 
 // @desc    Update order status (Accept/Reject/Preparing flow by Shop Owner)

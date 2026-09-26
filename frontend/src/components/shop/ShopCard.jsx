@@ -17,6 +17,10 @@ const ShopCard = ({ shop }) => {
         rating = 4.5
     } = shop;
 
+    const ratingValue = typeof rating === "number"
+        ? rating
+        : (typeof rating?.average === "number" ? rating.average : 4.5);
+
     const imageUrl = images && images.length > 0
         ? (typeof images[0] === "string" ? images[0] : images[0]?.url)
         : "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=400";
@@ -43,7 +47,7 @@ const ShopCard = ({ shop }) => {
                 </div>
 
                 <div className="shop-card-meta">
-                    <span>⭐ {rating ? rating.toFixed(1) : "4.5"}</span>
+                    <span>⭐ {ratingValue.toFixed(1)}</span>
                     {formattedDistance && <span className="shop-distance">🚗 {formattedDistance} away</span>}
                     <span>⚡ Radius: {deliveryRadiusKm}km</span>
                 </div>

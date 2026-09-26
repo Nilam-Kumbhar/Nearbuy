@@ -206,25 +206,18 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
     const products = await Product.find(filter)
         .populate("shop", "name address")
-        .populate("category", "name shopCategory icon")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limitNum);
 
     const total = await Product.countDocuments(filter);
 
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            {
-                products,
-                total,
-                page: pageNum,
-                pages: Math.ceil(total / limitNum)
-            },
-            "Products fetched successfully"
-        )
-    );
+    const response = new ApiResponse(200, products, "Products fetched successfully");
+    response.total = total;
+    response.page = pageNum;
+    response.pages = Math.ceil(total / limitNum);
+
+    return res.status(200).json(response);
 });
 
 // @desc    Get product details by ID

@@ -28,6 +28,14 @@ router.get(
     getMyOrders
 );
 
+// Shop Owner Routes
+router.get(
+    "/shop-orders",
+    verifyJWT,
+    authorizeRoles("shop_owner"),
+    getShopOrders
+);
+
 router.get(
     "/:id",
     verifyJWT,
@@ -42,13 +50,7 @@ router.put(
     cancelOrder
 );
 
-// Shop Owner Routes
-router.get(
-    "/shop-orders",
-    verifyJWT,
-    authorizeRoles("shop_owner"),
-    getShopOrders
-);
+
 
 router.put(
     "/status/:id",

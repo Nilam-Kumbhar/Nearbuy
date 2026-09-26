@@ -71,25 +71,20 @@ const Navbar = () => {
                         )}
 
                         {/* Vendor / Shop Owner Links */}
-                        {userRole === "vendor" && (
+                        {(userRole === "vendor" || userRole === "shop_owner" || userRole === "shopOwner") && (
                             <>
                                 <li>
-                                    <NavLink to="/vendor/dashboard" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
+                                    <NavLink to="/shop/dashboard" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
                                         Dashboard
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/vendor/shop" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
-                                        My Shop
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink to="/vendor/products" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
+                                    <NavLink to="/shop/products" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
                                         Products
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/vendor/orders" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
+                                    <NavLink to="/shop/orders" className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}>
                                         Orders
                                     </NavLink>
                                 </li>

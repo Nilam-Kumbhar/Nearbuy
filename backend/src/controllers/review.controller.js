@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { Review } from "../models/Review,model.js";
+import { Review } from "../models/Review.model.js";
 import { Order } from "../models/Order.model.js";
 import { Shop } from "../models/Shop.model.js";
 import { DeliveryPartner } from "../models/DeliveryPartner.model.js";

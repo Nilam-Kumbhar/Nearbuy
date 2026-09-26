@@ -1,4 +1,4 @@
-import mongoose,{Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 
 const productSchema = new Schema(
@@ -9,9 +9,9 @@ const productSchema = new Schema(
       required: true,
     },
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
       required: true,
+      trim: true
     },
     name: {
       type: String,
@@ -65,4 +65,4 @@ const productSchema = new Schema(
 productSchema.index({ shop: 1, category: 1 });
 productSchema.index({ name: "text" }); // supports smart/text search
 
-export const Product =  mongoose.model("Product", productSchema);
+export const Product = mongoose.model("Product", productSchema);

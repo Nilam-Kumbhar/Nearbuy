@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import "./CartSummary.css";
 
-const CartSummary = ({ onCheckout, isCheckoutPage = false }) => {
+const CartSummary = ({ onCheckout, isCheckoutPage = false, checkoutDisabled = false, checkoutButtonLabel = "Place Order & Pay" }) => {
     const { cart, cartCount } = useCart();
 
     const items = cart?.items || [];
@@ -39,8 +39,9 @@ const CartSummary = ({ onCheckout, isCheckoutPage = false }) => {
                     Proceed to Checkout
                 </Link>
             ) : (
-                <button onClick={onCheckout} className="checkout-btn">
-                    Place Order & Pay
+                <button onClick={onCheckout} className="checkout-btn"disabled={checkoutDisabled}>
+                    {checkoutButtonLabel}
+                    {/* Place Order & Pay */}
                 </button>
             )}
         </div>

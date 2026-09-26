@@ -21,7 +21,7 @@ const Login = () => {
             const res = await login(credentials);
             toast.success("Logged in successfully!");
             const userRole = res?.data?.user?.role;
-            if (userRole === "vendor" || userRole === "shopOwner") {
+            if (userRole === "vendor" || userRole === "shopOwner" || userRole === "shop_owner") {
                 navigate("/shop/dashboard");
             } else if (userRole === "delivery") {
                 navigate("/delivery/dashboard");

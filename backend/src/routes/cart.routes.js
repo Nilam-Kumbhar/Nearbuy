@@ -34,14 +34,14 @@ router.put(
 );
 
 router.delete(
-    "/:id",
+    "/clear",
     verifyJWT,
     authorizeRoles("customer"),
     removeCartItem
 );
 
 router.delete(
-    "/clear",
+    "/:id",
     verifyJWT,
     authorizeRoles("customer"),
     clearCart

@@ -42,7 +42,8 @@ const Register = () => {
             toast.success("Registration successful! Please sign in.");
             navigate("/login");
         } catch (error) {
-            toast.error(error?.message || "Registration failed");
+            const errorMsg = error?.message || (typeof error === "string" ? error : "Registration failed");
+            toast.error(errorMsg);
         } finally {
             setLoading(false);
         }
@@ -105,17 +106,16 @@ const Register = () => {
                         className="register-select"
                     >
                         <option value="customer">Customer</option>
-                        <option value="vendor">Shop Owner / Vendor</option>
+                        <option value="shop_owner">Shop Owner / Vendor</option>
                         <option value="delivery">Delivery Partner</option>
                     </select>
                 </div>
                 <div className="register-form-group">
-                    <label className="register-label">Profile Image (Avatar)</label>
+                    <label className="register-label">Profile Image (Avatar - Optional)</label>
                     <input
                         type="file"
                         name="avatar"
                         onChange={handleFileChange}
-                        required
                         accept="image/*"
                         className="register-file-input"
                     />
