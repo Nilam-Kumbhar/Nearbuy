@@ -37,14 +37,14 @@ router.delete(
     "/clear",
     verifyJWT,
     authorizeRoles("customer"),
-    removeCartItem
+    clearCart
 );
 
 router.delete(
     "/:id",
     verifyJWT,
     authorizeRoles("customer"),
-    clearCart
+    removeCartItem
 );
 
 export default router;

@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { DeliveryPartner } from "../models/DeliveryPartner.model.js";
 import { Order } from "../models/Order.model.js";
+import { Shop } from "../models/Shop.model.js";
 
 // Helper function to get or create DeliveryPartner profile
 const getOrCreatePartnerProfile = async (userId) => {
@@ -199,10 +200,89 @@ const updateLiveLocation = asyncHandler(async (req, res) => {
     );
 });
 
+// @desc    Manually assign delivery partner to an order (fallback for shop owner)
+// @route   POST /api/v1/delivery/assign/:orderId
+// @access  Private (Shop Owner)
+const assignDeliveryPartner = asyncHandler(async (req, res) => {
+    const { orderId } = req.params;
+    const { deliveryPartnerId } = req.body;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+        throw new ApiError(404, "Order not found");
+    }
+
+    const shop = await Shop.findOne({ owner: req.user._id });
+    if (!shop || order.shop.toString() !== shop._id.toString()) {
+        throw new ApiError(403, "You are not authorized to assign a delivery partner for this order");
+    }
+
+    let partner = null;
+
+    if (deliveryPartnerId) {
+        partner = await DeliveryPartner.findById(deliveryPartnerId);
+        if (!partner) {
+            partner = await DeliveryPartner.findOne({ user: deliveryPartnerId });
+        }
+
+        if (!partner) {
+            throw new ApiError(404, "Specified delivery partner not found");
+        }
+
+        if (!partner.isAvailable) {
+            throw new ApiError(400, "Specified delivery partner is currently not available");
+        }
+
+        if (partner.activeOrder && partner.activeOrder.toString() !== order._id.toString()) {
+            throw new ApiError(400, "Specified delivery partner already has an active order");
+        }
+    } else {
+        if (!shop.address?.location?.coordinates) {
+            throw new ApiError(400, "Shop location coordinates are missing to find nearby delivery partners");
+        }
+
+        partner = await DeliveryPartner.findOne({
+            isAvailable: true,
+            activeOrder: null,
+            currentLocation: {
+                $near: {
+                    $geometry: {
+                        type: "Point",
+                        coordinates: shop.address.location.coordinates
+                    }
+                }
+            }
+        });
+
+        if (!partner) {
+            throw new ApiError(404, "No available delivery partner found nearby");
+        }
+    }
+
+    if (order.deliveryPartner && order.deliveryPartner.toString() !== partner._id.toString()) {
+        const previousPartner = await DeliveryPartner.findById(order.deliveryPartner);
+        if (previousPartner && previousPartner.activeOrder?.toString() === order._id.toString()) {
+            previousPartner.activeOrder = null;
+            await previousPartner.save();
+        }
+    }
+
+    order.deliveryPartner = partner._id;
+    partner.activeOrder = order._id;
+
+    await partner.save();
+    await order.save();
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, order, "Delivery partner assigned successfully"));
+});
+
 export {
     getAssignedOrders,
     updateDeliveryStatus,
     deliveryHistory,
     toggleAvailability,
-    updateLiveLocation
+    updateLiveLocation,
+    assignDeliveryPartner
 };

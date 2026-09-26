@@ -5,6 +5,7 @@ import { Order } from "../models/Order.model.js";
 import { Cart } from "../models/Cart.model.js";
 import { Product } from "../models/Product.model.js";
 import { Shop } from "../models/Shop.model.js";
+import { DeliveryPartner } from "../models/DeliveryPartner.model.js";
 
 // @desc    Place a new order (converts cart -> order, snapshots prices, decrements stock)
 // @route   POST /api/v1/orders/place
@@ -310,7 +311,31 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         throw new ApiError(403, "You are not authorized to update this order");
     }
 
-    // If status is being set to rejected, restore product stock
+    // Auto-assign nearest available delivery partner when status is updated to "preparing"
+    if (status === "preparing" && !order.deliveryPartner) {
+        if (shop.address?.location?.coordinates) {
+            const nearestPartner = await DeliveryPartner.findOne({
+                isAvailable: true,
+                activeOrder: null,
+                currentLocation: {
+                    $near: {
+                        $geometry: {
+                            type: "Point",
+                            coordinates: shop.address.location.coordinates
+                        }
+                    }
+                }
+            });
+
+            if (nearestPartner) {
+                order.deliveryPartner = nearestPartner._id;
+                nearestPartner.activeOrder = order._id;
+                await nearestPartner.save();
+            }
+        }
+    }
+
+    // If status is being set to rejected, restore product stock & clear delivery partner active order if assigned
     if (status === "rejected" && order.status !== "rejected" && order.status !== "cancelled") {
         for (const item of order.items) {
             await Product.findByIdAndUpdate(item.product, {
@@ -319,6 +344,9 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
                     salesCount: -item.quantity
                 }
             });
+        }
+        if (order.deliveryPartner) {
+            await DeliveryPartner.findByIdAndUpdate(order.deliveryPartner, { activeOrder: null });
         }
     }
 

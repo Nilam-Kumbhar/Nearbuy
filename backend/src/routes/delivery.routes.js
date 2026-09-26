@@ -4,7 +4,8 @@ import {
     updateDeliveryStatus,
     deliveryHistory,
     toggleAvailability,
-    updateLiveLocation
+    updateLiveLocation,
+    assignDeliveryPartner
 } from "../controllers/delivery.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -45,6 +46,13 @@ router.put(
     verifyJWT,
     authorizeRoles("delivery"),
     updateLiveLocation
+);
+
+router.post(
+    "/assign/:orderId",
+    verifyJWT,
+    authorizeRoles("shop_owner"),
+    assignDeliveryPartner
 );
 
 export default router;
